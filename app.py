@@ -18,10 +18,12 @@ st.set_page_config(layout="wide")
 ### 1. 부산 읍면동(행정동)별 인구수 시각화
 
 """
-DATA_URL = "https://raw.githubusercontent.com/givemetarte/earthquake/main/busan-population-polygon.csv"
+DATA_URL = (
+    "https://raw.githubusercontent.com/givemetarte/earthquake/main/busan-polygon.csv"
+)
 
 
-@st.cache(persist=True)
+@st.cache(allow_output_mutation=True, persist=True)
 def load_data():
     data = pd.read_csv(DATA_URL, encoding="utf-8", index_col=0)
     return data
@@ -29,16 +31,26 @@ def load_data():
 
 data = load_data()
 
-
-def multipolygon_to_coordinates(x):
-    if x.geom_type == "MultiPolygon":
-        lon, lat = x[0].exterior.xy
-    else:
-        lon, lat = x.exterior.xy
-    return [[x, y] for x, y in zip(lon, lat)]
-
-
-data["coordinates"] = data["geometry"].apply(multipolygon_to_coordinates)
-del data["geometry"]
-
 st.write(data)
+
+data["정규화인구"] = data["인구수"] / data["인구수"].max()
+
+# Make layer
+layer = pdk.Layer(
+    "PolygonLayer",  # 사용할 Layer 타입
+    data,  # 시각화에 쓰일 데이터프레임
+    get_polygon="coordinates",  # geometry 정보를 담고있는 컬럼 이름
+    get_fill_color="[0, 255*정규화인구, 0]",  # 각 데이터 별 rgb 또는 rgba 값 (0~255)
+    pickable=True,  # 지도와 interactive 한 동작 on
+    auto_highlight=True,  # 마우스 오버(hover) 시 박스 출력
+)
+
+# Set the viewport location
+center = [129.05562775, 35.1379222]
+view_state = pdk.ViewState(longitude=center[0], latitude=center[1], zoom=10)
+
+# Render
+# r = pdk.Deck(layers=[layer], initial_view_state=view_state)
+# r.show()
+
+st.write(pdk.Deck(layers=[layer], initial_view_state=view_state))
