@@ -19,7 +19,7 @@ st.set_page_config(layout="wide")
 ### 1. 부산 읍면동(행정동)별 인구수 시각화
 
 """
-DATA_URL = ""
+DATA_URL = "https://github.com/givemetarte/earthquake/blob/main/busan-population-polygon.geojson"
 
 
 @st.cache(persist=True)
@@ -28,5 +28,7 @@ def load_data():
         data = geojson.load(f)
     return data
 
+
+data = load_data()
 
 st.write(data)
