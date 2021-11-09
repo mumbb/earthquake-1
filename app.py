@@ -23,21 +23,22 @@ DATA_URL = "https://raw.githubusercontent.com/givemetarte/earthquake/main/busan-
 
 @st.cache(persist=True)
 def load_data():
-    data = gpd.read_file(DATA_URL, encoding="utf-8", index_col=0)
+    data = pd.read_csv(DATA_URL, encoding="utf-8", index_col=0)
     return data
 
 
 data = load_data()
 
-st.write(data)
 
-
-def polygon_to_coordinates(x):
-    lon, lat = x[0].exterior.xy
+def multipolygon_to_coordinates(x):
+    if x.geom_type == "MultiPolygon":
+        lon, lat = x[0].exterior.xy
+    else:
+        lon, lat = x.exterior.xy
     return [[x, y] for x, y in zip(lon, lat)]
 
 
-data["coordinates"] = data["geometry"].apply(polygon_to_coordinates)
+data["coordinates"] = data["geometry"].apply(multipolygon_to_coordinates)
 del data["geometry"]
 
 st.write(data)
