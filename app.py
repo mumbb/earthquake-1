@@ -2,11 +2,10 @@
 
 import streamlit as st
 import pandas as pd
+import geopandas as gpd
 import numpy as np
 import os
-from mapboxgl.utils import create_color_stops
-import mapboxgl
-from mapboxgl.viz import *
+import pydeck as pdk
 import geojson
 import time
 
@@ -19,16 +18,26 @@ st.set_page_config(layout="wide")
 ### 1. 부산 읍면동(행정동)별 인구수 시각화
 
 """
-DATA_URL = "https://github.com/givemetarte/earthquake/blob/main/busan-population-polygon.geojson"
+DATA_URL = "https://raw.githubusercontent.com/givemetarte/earthquake/main/busan-population-polygon.csv"
 
 
 @st.cache(persist=True)
 def load_data():
-    with open(DATA_URL, "rt", encoding="utf-8") as f:
-        data = geojson.load(f)
+    data = gpd.read_file(DATA_URL, encoding="utf-8", index_col=0)
     return data
 
 
 data = load_data()
+
+st.write(data)
+
+
+def polygon_to_coordinates(x):
+    lon, lat = x[0].exterior.xy
+    return [[x, y] for x, y in zip(lon, lat)]
+
+
+data["coordinates"] = data["geometry"].apply(polygon_to_coordinates)
+del data["geometry"]
 
 st.write(data)
