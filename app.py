@@ -23,7 +23,7 @@ DATA_URL = (
 )
 
 
-@st.cache(allow_output_mutation=True, persist=True)
+# @st.cache(allow_output_mutation=True, persist=True)
 def load_data():
     data = pd.read_csv(DATA_URL, encoding="utf-8", index_col=0)
     return data
@@ -32,8 +32,6 @@ def load_data():
 data = load_data()
 
 st.write(data)
-
-data["정규화인구"] = data["인구수"] / data["인구수"].max()
 
 # Make layer
 layer = pdk.Layer(
@@ -49,8 +47,4 @@ layer = pdk.Layer(
 center = [129.05562775, 35.1379222]
 view_state = pdk.ViewState(longitude=center[0], latitude=center[1], zoom=10)
 
-# Render
-# r = pdk.Deck(layers=[layer], initial_view_state=view_state)
-# r.show()
-
-st.write(pdk.Deck(layers=[layer], initial_view_state=view_state))
+st.pydeck_chart(pdk.Deck(layers=[layer], initial_view_state=view_state))
