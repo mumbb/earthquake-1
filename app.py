@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import streamlit as st
-import pandas as pd
-import geopandas as gpd
-import numpy as np
+import streamlit.components.v1 as components
 import os
-import pydeck as pdk
-import geojson
-import time
+from koad_viz import koad_viz
+
 
 # SETTING PAGE CONFIG TO WIDE MODE
 st.set_page_config(layout="wide")
@@ -18,12 +15,16 @@ st.set_page_config(layout="wide")
 ### 1. 부산 읍면동(행정동)별 인구수 시각화
 
 """
-DATA_URL = (
-    "https://raw.githubusercontent.com/givemetarte/earthquake/main/busan-polygon.csv"
+
+# SIDEBAR
+st.sidebar.image("./static/hike.png")
+add_selectbox = st.sidebar.selectbox(
+    "What would you like to see?", ("행정구역 인구수", "지진 시나리오")
 )
 
 
-@st.cache(allow_output_mutation=True, persist=True)
-def load_data():
-    data = pd.read_csv(DATA_URL, encoding="utf-8", index_col=0)
-    return data
+# busan population viz
+koad_viz(600)
+
+
+# @st.cache(allow_output_mutation=True, persist=True)
