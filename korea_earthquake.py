@@ -25,7 +25,6 @@ st.header("1. 전국 지진 발생현황 (1978~2021)")
 
 HtmlFile = open("./data/korea_earth(1978-2021)-geo.html", "r", encoding="utf-8")
 source_code = HtmlFile.read()
-print(source_code)
 components.html(source_code, height=600)
 
 
@@ -36,7 +35,6 @@ components.html(source_code, height=600)
 
 HtmlFile = open("./data/korea_earthquake_detail-line.html", "r", encoding="utf-8")
 source_code = HtmlFile.read()
-print(source_code)
 components.html(source_code, height=500)
 
 
@@ -48,7 +46,6 @@ with col3:
     st.caption("미소지진을 제외한 규모 2.0 이상의 지진 누적빈도")
     HtmlFile = open("./data/sido_earthquake.html", "r", encoding="utf-8")
     source_code = HtmlFile.read()
-    print(source_code)
     components.html(source_code, height=600)
     """
     전국 시도 중 경상북도가 가장 지진이 많이 일어났음.
@@ -60,7 +57,6 @@ with col4:
     st.caption("미소지진을 제외한 규모 2.0 이상의 지진 누적빈도")
     HtmlFile = open("./data/sigungu_earthquake.html", "r", encoding="utf-8")
     source_code = HtmlFile.read()
-    print(source_code)
     components.html(source_code, height=600)
     """
     전국 시군구 중에서는 경주시가 가장 지진이 많이 일어났다.
