@@ -23,7 +23,7 @@ DATA_URL = (
 )
 
 
-# @st.cache(allow_output_mutation=True, persist=True)
+@st.cache(allow_output_mutation=True, persist=True)
 def load_data():
     data = pd.read_csv(DATA_URL, encoding="utf-8", index_col=0)
     return data
@@ -46,5 +46,3 @@ layer = pdk.Layer(
 # Set the viewport location
 center = [129.05562775, 35.1379222]
 view_state = pdk.ViewState(longitude=center[0], latitude=center[1], zoom=10)
-
-st.pydeck_chart(pdk.Deck(layers=[layer], initial_view_state=view_state))
